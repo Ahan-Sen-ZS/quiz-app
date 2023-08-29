@@ -4,20 +4,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
     <div class="container">
-        <h2 id="question"></h2>
+
+        <h1>Quiz App</h1>
+    <form id="registration-form" >
+      <input type="text" id="user-name" placeholder="UserName">
+      <input type="text" id="email" placeholder="Email">
+      <div id="categorys">Select Category</div>
+        <br/>
+        
+        <label for="film">
+            <input type="radio" id="film" name="category" value="11">Entertainment: Film
+        </label><br>
+        
+        <label for="book">
+            <input type="radio" id="book" name="category" value="10">Entertainment: Books
+        </label><br>
+        
+        <label for="art">
+            <input type="radio" id="art" name="category" value="25">Art
+        </label> <br/>
+        
+        <label for="geo">
+            <input type="radio" id="geo" name="category" value="22">Geography
+        </label>
+        <br/>
+        
+      <input type="number" id="number-question" placeholder="Select number of questions">
+      <br/>
+      
+      <label for="easy">
+        <input type="radio" id="easy" name="level" value="easy">Easy
+      </label><br>
+      <label for="medium">
+        <input type="radio" id="medium" name="level" value="medium">Medium
+    </label><br>
+      <label for="hard"> 
+        <input type="radio" id="hard" name="level" value="hard">Hard
+    </label>
+      <br/>
+      <button type="submit" id="registerButton">Register</button>
+    </form>
+
+    <div id="questionOptions" class="hidden">
+        <div>
+            <h1 id="timer"></h1>
+            <h2 id="question"></h2>
+        </div>
 
         <div id="choices">
 
         </div>
 
         <button id="submit" onclick="displayAnswer()">submit</button>
-        <button id="next" onclick="nextQuestion()">Next</button>
+        <button id="next"  onclick="nextQuestion()">Next</button>
 
         <p id="answer" ></p>
+    </div>
+
+    <div id="finalScore">
+
+    </div>
     </div>
 
      <script src="script.js"></script>
