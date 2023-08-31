@@ -6,7 +6,7 @@ body {
   .container {
     max-width: 500px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 20px 35px 20px 35px;
     background-color: #fff;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -14,16 +14,16 @@ body {
 
 
 .bg-green{
-    background-color: green !important;
+    background-color: #008000a3 !important;
 }
 
 .bg-red{
-    background-color: red !important
+    background-color: #fe4d4de8 !important
     ;
 }
 
 .hidden{
-    display: none;
+    display: none !important;
 }
 
 h1 {
@@ -35,20 +35,6 @@ form {
   justify-content: center;
   margin-bottom: 20px;
 }
-
-/* input[type="text"] {
-  padding: 10px;
-  width: 70%;  
-  border-radius: 5px 0 0 5px; 
-  margin-bottom: 20px;
-} 
-
-input[type="number"] {
-  padding: 10px;
-  width: 70%;  
-  border-radius: 5px 0 0 5px; 
-  margin-bottom: 20px;
-}  */
 
 .input-group {
   display: flex;
@@ -82,18 +68,45 @@ input[type="number"] {
 .timer-question{
   display: flex;
     flex-direction: column;
-    align-items: center;
+}
+
+.question-number{
+  display: flex;
+  justify-content: space-between;
 }
 
 .circle-container {
-  width: 75px;
-  height: 75px;
+  width: 50px;
+  height: 50px;
   background-color: #007bff;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
+.result {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+  margin: 100px;
+  margin-top: 50px;
+}
+
+.circle-container-result{
+  width: 200px;
+    height: 200px;
+    background-color: #007bff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 50px;
+}
+
 
 .circle-content {
   color: white;
@@ -113,13 +126,22 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  min-width: 100px;
+  min-height: 35px;
+}
+
+button:disabled{
+  border: 1px solid #999999;
+  background-color: #cccccc;
+  color: #666666;
+  cursor: default;
 }
 
 .choice {
   display: flex;
   cursor: pointer;
   background-color: white;
-  border: 2px solid gray;
+  border: 2px solid #f0f0f0;
   border-radius: 25px;
   text-align: center;
   justify-content: center;
@@ -127,10 +149,10 @@ button {
   margin-bottom: 24px;
 }
 
-.choice:hover{
+/* .choice:hover{
   border: 2px solid #007bff;
   color: #007bff;
-}
+} */
 
 .selected {
   border: 2px solid #007bff;

@@ -6,8 +6,11 @@ const next = document.querySelector('#next');
 const submit = document.querySelector('#submit');
 const answer = document.querySelector('#answer');
 const form = document.querySelector("#registration-form")
+const questionNo = document.querySelector("#questionNo")
 const questionOptions= document.querySelector("#questionOptions")
 const finalScore= document.querySelector("#finalScore")
+const playAgain = document.querySelector('#playAgain')
+const result = document.querySelector('#result')
 
     
 const usernameError = document.querySelector("#username-error");
@@ -16,26 +19,12 @@ const questionError = document.querySelector("#question-error");
 const formErrorsInput = document.querySelectorAll('#registration-form  input')
 
 
-// formErrorsInput.forEach(formError =>{
-//     formError.addEventListener('focus' , ()=>{
-//         console.log('fs');
-//         usernameError.textContent=""
-//         emailError.textContent=""
-//         questionError.textContent=""
-//     })
-// })
-
-
-
-
 document.getElementById("registerButton").addEventListener("click", function (event) {
     event.preventDefault(); 
 
     const userName = document.querySelector("#user-name").value;
     const email = document.querySelector("#email").value;
-    const categorySelect = document.querySelector("#category-select");
     const numQuestions = document.querySelector("#number-question").value;
-    const levelSelect = document.querySelector("#level-select");
 
     usernameError.textContent=""
     emailError.textContent=""
@@ -72,30 +61,6 @@ document.getElementById("registerButton").addEventListener("click", function (ev
 
 
 let quiz = []
-const fetchQuestions = async () => {
-    // e.preventDefault()
-    // console.log(1);
-
-    var numberOfQuestions = document.getElementById('number-question').value;
-    var level = document.querySelector('#level-select').value;
-    var questionCategory = document.querySelector('#category-select').value;
-    try {
-        const response = await  fetch('https://opentdb.com/api.php?amount='+ numberOfQuestions + ' &category= ' + questionCategory + '&difficulty=' + level +'&type=' + 'multiple')
-        const json = await response.json();
-        console.log(json);
-        quiz = json.results
-        
-        form.classList.add('hidden')
-        questionOptions.classList.remove('hidden')
-        showQuestions(quiz)  
-        startTimer()
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-// document.getElementById("registerButton").addEventListener("click", fetchQuestions);
-
 var startcountdown = null
 let currentQuestionIndex = 0;
 let timeleft = 20
@@ -103,6 +68,25 @@ var paused = false;
 var showSubmit=true
 var showNext = false
 var submited=false
+var score = 0
+
+const fetchQuestions = async () => {
+    var numberOfQuestions = document.getElementById('number-question').value;
+    var level = document.querySelector('#level-select').value;
+    var questionCategory = document.querySelector('#category-select').value;
+    try {
+        const response = await  fetch('https://opentdb.com/api.php?amount='+ numberOfQuestions + ' &category= ' + questionCategory + '&difficulty=' + level +'&type=' + 'multiple')
+        const json = await response.json();
+        quiz = json.results
+        
+        form.classList.add('hidden')
+        questionOptions.classList.remove('hidden')
+        showQuestions(quiz)  
+        startTimer()
+    } catch (error) {
+        document.querySelector('#error').textContent(error)
+    }
+}
 
 const startTimer = () =>{
     clearInterval(startcountdown)
@@ -111,22 +95,24 @@ const startTimer = () =>{
             timeleft--
         }
         timer.textContent = timeleft
-        if (timeleft==0){
-            displayAnswer()
+        if (timeleft==0 && !submited){
+            displayAnswer(false)
             // nextQuestion()
         }
     }
     startcountdown = setInterval(countdown,1000)
 }
 
-
-
-
 const showQuestions = (quiz) => {
     timer.textContent=20
+    submit.setAttribute('disabled', true)
     paused=false;
+    submited=false
+
     submit.classList.remove('hidden')
     next.classList.add("hidden")
+
+    questionNo.innerHTML = "Question " + (currentQuestionIndex+1)
 
     const questionDetails = quiz[currentQuestionIndex];
     questionBox.innerHTML = questionDetails.question;
@@ -151,25 +137,41 @@ const showQuestions = (quiz) => {
 
         choicesBox.appendChild(label);
 
+        label.addEventListener('mouseover', function() {
+            if( ! submited){
+                label.style.border = '2px solid #007bff'; 
+                label.style.cursor = "pointer"
+            }else{
+                label.style.cursor = 'default'
+            }
+        });
+        label.addEventListener('mouseout', function() {
+            label.style.border = ''; 
+        });
+
         
         radioButton.addEventListener('click', ()=>{
-            selectedOption?.parentElement.classList.remove('selected')
-            selectedOption = document.querySelector('input[name="option"]:checked');
-            selectedOption?.parentElement.classList.add('selected')
+            if ( ! submited){
+
+                submit.removeAttribute('disabled')
+
+                selectedOption?.parentElement.classList.remove('selected')
+                selectedOption = document.querySelector('input[name="option"]:checked');
+                selectedOption?.parentElement.classList.add('selected')
+            }
         })
-        
     });
 }
-
-var score = 0
-const displayAnswer = () => {
-    
+const displayAnswer = (sub) => {
+    submited = true
     paused = true
     const selectedOption = document.querySelector('input[name="option"]:checked');
     selectedOption?.parentElement.classList.remove('selected')
     
     if (selectedOption?.value == quiz[currentQuestionIndex].correct_answer){
-        score++
+        if (sub) {
+            score++
+        }
         selectedOption?.parentElement.classList.add("bg-green")
     }else{
         for(let i=0 ; i<4;i++){
@@ -177,26 +179,30 @@ const displayAnswer = () => {
                 choicesBox.children[i].classList.add('bg-green')
             }
         }
-        selectedOption?.parentElement.classList.add("bg-red")
+        sub && selectedOption?.parentElement.classList.add("bg-red")
     }
-    // answer.innerHTML = selectedOption?.value + " " + score
-
     submit.classList.add('hidden')
     next.classList.remove("hidden")
 }
 
 const nextQuestion = () => {
-    timeleft = 21
+    timeleft = 20
     if (currentQuestionIndex < quiz.length-1){
         currentQuestionIndex++
         showQuestions(quiz)
     } else{
-        timer.classList.add('hidden')
         questionOptions.classList.add('hidden')
-        finalScore.innerHTML = "Your score : " + score + " / " + quiz.length
+        result.classList.remove('hidden')
+        finalScore.innerHTML =  + score + " / " + quiz.length
         clearInterval(startcountdown)
     }
 }
 
 
-// fetchQuestions()
+playAgain.addEventListener('click',()=>{
+
+    result.classList.add('hidden')
+    form.classList.remove('hidden')
+    currentQuestionIndex = 0
+    score = 0
+})
