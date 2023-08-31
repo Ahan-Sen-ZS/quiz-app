@@ -14,11 +14,12 @@ body {
 
 
 .bg-green{
-    background-color: green;
+    background-color: green !important;
 }
 
 .bg-red{
-    background-color: red;
+    background-color: red !important
+    ;
 }
 
 .hidden{
@@ -35,7 +36,7 @@ form {
   margin-bottom: 20px;
 }
 
-input[type="text"] {
+/* input[type="text"] {
   padding: 10px;
   width: 70%;  
   border-radius: 5px 0 0 5px; 
@@ -47,11 +48,62 @@ input[type="number"] {
   width: 70%;  
   border-radius: 5px 0 0 5px; 
   margin-bottom: 20px;
-} 
+}  */
 
-input[type="radio"] {
+.input-group {
+  display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.input-group label{
+  margin-bottom: 8px;
+}
+
+.input-field {
+  width: 70%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.select-field {
+  width: 74%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+}
+
+.form-error{
+  font-size: 12px;
+  color: red;
+}
+.timer-question{
+  display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.circle-container {
+  width: 75px;
+  height: 75px;
+  background-color: #007bff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle-content {
+  color: white;
+  font-size: 24px;
+}
+
+#choices input[type="radio"] {
   border-radius: 5px 0 0 5px; 
   margin-bottom: 20px;
+  visibility:hidden;
 } 
 
 button {
@@ -62,6 +114,30 @@ button {
   border-radius: 5px;
   cursor: pointer;
 }
+
+.choice {
+  display: flex;
+  cursor: pointer;
+  background-color: white;
+  border: 2px solid gray;
+  border-radius: 25px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.choice:hover{
+  border: 2px solid #007bff;
+  color: #007bff;
+}
+
+.selected {
+  border: 2px solid #007bff;
+  color: #007bff;
+}
+
+
 
 
 

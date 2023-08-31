@@ -9,15 +9,76 @@ const form = document.querySelector("#registration-form")
 const questionOptions= document.querySelector("#questionOptions")
 const finalScore= document.querySelector("#finalScore")
 
+    
+const usernameError = document.querySelector("#username-error");
+const emailError = document.querySelector("#email-error");
+const questionError = document.querySelector("#question-error");
+const formErrorsInput = document.querySelectorAll('#registration-form  input')
+
+
+// formErrorsInput.forEach(formError =>{
+//     formError.addEventListener('focus' , ()=>{
+//         console.log('fs');
+//         usernameError.textContent=""
+//         emailError.textContent=""
+//         questionError.textContent=""
+//     })
+// })
+
+
+
+
+document.getElementById("registerButton").addEventListener("click", function (event) {
+    event.preventDefault(); 
+
+    const userName = document.querySelector("#user-name").value;
+    const email = document.querySelector("#email").value;
+    const categorySelect = document.querySelector("#category-select");
+    const numQuestions = document.querySelector("#number-question").value;
+    const levelSelect = document.querySelector("#level-select");
+
+    usernameError.textContent=""
+    emailError.textContent=""
+    questionError.textContent=""
+    
+
+    if (userName === "" || email === "" ||  numQuestions === "" ) {
+        if(userName === ""){
+            usernameError.textContent="* username cannot be left blank"
+        }
+        if(email === ""){
+            emailError.textContent="* email cannot be left blank"
+        }
+        if(numQuestions === ""){
+            questionError.textContent="* question cannot be left blank"
+        }
+        return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.match(emailPattern)) {
+        emailError.textContent="* Please enter a valid email"
+        return;
+    }
+
+    if (parseInt(numQuestions) < 5) {
+        questionError.textContent="* Minimum of 5 questions must be selected.";
+        return;
+    }
+
+
+    fetchQuestions()
+});
+
 
 let quiz = []
-const fetchQuestions = async (e) => {
-    e.preventDefault()
-    console.log(1);
+const fetchQuestions = async () => {
+    // e.preventDefault()
+    // console.log(1);
 
     var numberOfQuestions = document.getElementById('number-question').value;
-    var level = document.querySelector('input[name="level"]:checked').value;
-    var questionCategory = document.querySelector('input[name="category"]:checked').value;
+    var level = document.querySelector('#level-select').value;
+    var questionCategory = document.querySelector('#category-select').value;
     try {
         const response = await  fetch('https://opentdb.com/api.php?amount='+ numberOfQuestions + ' &category= ' + questionCategory + '&difficulty=' + level +'&type=' + 'multiple')
         const json = await response.json();
@@ -33,7 +94,7 @@ const fetchQuestions = async (e) => {
     }
 }
 
-document.getElementById("registerButton").addEventListener("click", fetchQuestions);
+// document.getElementById("registerButton").addEventListener("click", fetchQuestions);
 
 var startcountdown = null
 let currentQuestionIndex = 0;
@@ -41,6 +102,7 @@ let timeleft = 20
 var paused = false;
 var showSubmit=true
 var showNext = false
+var submited=false
 
 const startTimer = () =>{
     clearInterval(startcountdown)
@@ -58,9 +120,10 @@ const startTimer = () =>{
 }
 
 
-const showQuestions = (quiz) => {
 
-    timeleft = 20
+
+const showQuestions = (quiz) => {
+    timer.textContent=20
     paused=false;
     submit.classList.remove('hidden')
     next.classList.add("hidden")
@@ -72,8 +135,10 @@ const showQuestions = (quiz) => {
     questionDetails.incorrect_answers.splice(randomNumber, 0, questionDetails.correct_answer);
 
     choicesBox.textContent = "";
+    var selectedOption = null;
     questionDetails.incorrect_answers.forEach(option => {
         const label = document.createElement('label');
+        label.classList.add('choice')
         const radioButton = document.createElement('input');
         radioButton.type = 'radio';
         radioButton.name = 'option';
@@ -86,15 +151,22 @@ const showQuestions = (quiz) => {
 
         choicesBox.appendChild(label);
 
+        
+        radioButton.addEventListener('click', ()=>{
+            selectedOption?.parentElement.classList.remove('selected')
+            selectedOption = document.querySelector('input[name="option"]:checked');
+            selectedOption?.parentElement.classList.add('selected')
+        })
+        
     });
 }
 
 var score = 0
 const displayAnswer = () => {
     
-    // console.log(document.querySelector('#choices').children[0].children[0].value)
     paused = true
     const selectedOption = document.querySelector('input[name="option"]:checked');
+    selectedOption?.parentElement.classList.remove('selected')
     
     if (selectedOption?.value == quiz[currentQuestionIndex].correct_answer){
         score++
@@ -114,6 +186,7 @@ const displayAnswer = () => {
 }
 
 const nextQuestion = () => {
+    timeleft = 21
     if (currentQuestionIndex < quiz.length-1){
         currentQuestionIndex++
         showQuestions(quiz)
